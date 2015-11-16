@@ -1,0 +1,106 @@
+CREATE TABLE User
+(
+UserID varchar(8) NOT NULL,
+Password varchar(50) NOT NULL,
+FirstName varchar(30) NOT NULL,
+LastName varchar(30) NOT NULL,
+Email varchar(30) NOT NULL,
+Phone varchar(10) NOT NULL,
+Major varchar(30) NOT NULL,
+School varchar(30) NOT NULL,
+Status varchar(10) NOT NULL,
+PRIMARY KEY(UserID)
+);
+
+#####################################################################
+
+CREATE TABLE Tutor
+(
+TutorID varchar(8) NOT NULL, 
+PRIMARY KEY(TutorID), 
+FOREIGN KEY(TutorID) REFERENCES User(UserID)
+);
+
+#####################################################################
+
+CREATE TABLE TimeTable
+(
+TutorID varchar(8) NOT NULL, 
+Date date NOT NULL,
+BeginTime time NOT NULL,
+EndTime time NOT NULL,
+PRIMARY KEY(TutorID, Date, BeginTime, EndTime), 
+FOREIGN KEY(TutorID) REFERENCES Tutor(TutorID)
+);
+
+#####################################################################
+
+CREATE TABLE Course
+(
+CourseID varchar(10) NOT NULL,
+CourseName varchar(50) NOT NULL,
+Description varchar(100),
+PRIMARY KEY(CourseID)
+);
+
+#####################################################################
+
+CREATE TABLE CourseOffer
+(
+CourseID varchar(10) NOT NULL,
+TutorID varchar(8) NOT NULL,
+PRIMARY KEY(CourseID, TutorID),
+FOREIGN KEY(CourseID) REFERENCES Course(CourseID),
+FOREIGN KEY(TutorID) REFERENCES Tutor(TutorID)
+);
+
+#####################################################################
+
+CREATE TABLE Location
+(
+LocationID INT NOT NULL AUTO_INCREMENT,
+Building varchar(20),
+Floor varchar(10),
+Room varchar(10),
+Capacity int,
+PRIMARY KEY(LocationID)
+);
+
+
+#####################################################################
+
+CREATE TABLE Schedule
+(
+ScheduleID INT NOT NULL AUTO_INCREMENT,
+UserID varchar(8) NOT NULL,
+TutorID varchar(8) NOT NULL,
+CourseID varchar(10)NOT NULL,
+LocationID int NOT NULL,
+Date date NOT NULL,
+BeginTime time NOT NULL,
+EndTime time NOT NULL,
+Status varchar(10),
+PRIMARY KEY(ScheduleID),
+FOREIGN KEY(UserID) REFERENCES User(UserID),
+FOREIGN KEY(TutorID) REFERENCES Tutor(TutorID),
+FOREIGN KEY(CourseID) REFERENCES Course(CourseID),
+FOREIGN KEY(LocationID) REFERENCES Location(LocationID)
+);
+
+ALTER TABLE Schedule
+ADD UNIQUE KEY `unique_key` (UserID, TutorID, CourseID, LocationID, Date, BeginTime)
+
+#####################################################################
+
+CREATE TABLE Rating
+(
+UserID varchar(8) NOT NULL,
+TutorID varchar(8) NOT NULL,
+CourseID varchar(10),
+Rating decimal(2,1),
+PRIMARY KEY(UserID, TutorID, CourseID),
+FOREIGN KEY(UserID) REFERENCES User(UserID),
+FOREIGN KEY(TutorID) REFERENCES Tutor(TutorID),
+FOREIGN KEY(CourseID) REFERENCES Course(CourseID)
+);
+
